@@ -4,6 +4,7 @@ import { defaultLineSettings } from "../../src/objectSettings/model/LineSettings
 import { PointSettings, defaultPointSettings } from "../../src/objectSettings/model/PointSettings";
 import { defaultScrapSettings } from "../../src/objectSettings/model/ScrapSettings";
 import { defaultAreaSettings } from "../../src/objectSettings/model/AreaSettings";
+import { Segment } from "@daem-on/graphite/models";
 
 const randomId = Math.random().toString(36).substring(7);
 vi.stubGlobal("crypto", {
@@ -79,6 +80,13 @@ test("export with all scrap settings", () => {
 	]);
 });
 
+const mockSegments: Segment[] = [
+	[[-580, -92], [2, 5], [-2, -5]],
+	[[-566, -125], [-14, 3], [14, -3]],
+	[[-524, -126], [-4, -7], [4, 7]],
+	[[-524, -90], [1, -4], [-1, 4]]
+];
+
 test("export closed line", () => {
 	const lineSettings = defaultLineSettings();
 	lineSettings.type = "wall";
@@ -87,12 +95,7 @@ test("export closed line", () => {
 		["Layer", {
 			children: [
 				["Path", {
-					segments: [
-						[[-580, -92], [2, 5], [-2, -5]],
-						[[-566, -125], [-14, 3], [14, -3]],
-						[[-524, -126], [-4, -7], [4, 7]],
-						[[-524, -90], [1, -4], [-1, 4]]
-					],
+					segments: mockSegments,
 					closed: true,
 					data: { therionData: lineSettings }
 				}]
@@ -116,6 +119,44 @@ test("export closed line", () => {
 	]);
 });
 
+test("export line with corners and curves", () => {
+	const lineSettings = defaultLineSettings();
+	lineSettings.type = "wall";
+
+	const result = processProject([
+		["Layer", {
+			children: [
+				["Path", {
+					segments: [
+						[-130.87, -18.95],
+						[-43.84, -18.53],
+						[[-24.76, -91.72], [-82.42, 0.21], [82.42, -0.21]],
+						[-7.14, -18.74],
+						[43.82, -17.48]
+					],
+					closed: false,
+					data: { therionData: lineSettings }
+				}]
+			],
+			name: "scrap1",
+			data: { therionData: defaultScrapSettings() }
+		}]
+	]);
+
+	expect(result).toEqual([
+		"encoding utf-8",
+		"scrap scrap1 ",
+		"	line wall",
+		"		-130.87 18.95",
+		"		-43.84 18.53",
+		"		-43.84 18.53 -107.18 91.51 -24.76 91.72",
+		"		57.66 91.93 -7.14 18.74 -7.14 18.74",
+		"		43.82 17.48",
+		"	endline",
+		"endscrap"
+	]);
+});
+
 test("export invisible area", () => {
 	const lineSettings = defaultLineSettings();
 	lineSettings.type = "border";
@@ -129,12 +170,7 @@ test("export invisible area", () => {
 		["Layer", {
 			children: [
 				["Path", {
-					segments: [
-						[[-580, -92], [2, 5], [-2, -5]],
-						[[-566, -125], [-14, 3], [14, -3]],
-						[[-524, -126], [-4, -7], [4, 7]],
-						[[-524, -90], [1, -4], [-1, 4]]
-					],
+					segments: mockSegments,
 					closed: true,
 					data: { therionData: areaSettings }
 				}]
@@ -172,12 +208,7 @@ test("export area with generated id", () => {
 		["Layer", {
 			children: [
 				["Path", {
-					segments: [
-						[[-580, -92], [2, 5], [-2, -5]],
-						[[-566, -125], [-14, 3], [14, -3]],
-						[[-524, -126], [-4, -7], [4, 7]],
-						[[-524, -90], [1, -4], [-1, 4]]
-					],
+					segments: mockSegments,
 					closed: true,
 					data: { therionData: areaSettings }
 				}]
@@ -200,6 +231,147 @@ test("export area with generated id", () => {
 		"	area water",
 		`		${randomId}`,
 		"	endarea",
+		"endscrap"
+	]);
+});
+
+
+test("export line with size", () => {
+	const lineSettings = defaultLineSettings();
+	lineSettings.type = "slope";
+	lineSettings.size = 2;
+
+	const result = processProject([
+		["Layer", {
+			children: [
+				["Path", {
+					segments: mockSegments,
+					closed: true,
+					data: { therionData: lineSettings }
+				}]
+			],
+			name: "scrap1",
+			data: { therionData: defaultScrapSettings() }
+		}]
+	]);
+
+	expect(result).toEqual([
+		"encoding utf-8",
+		"scrap scrap1 ",
+		"	line slope -close on",
+		"		-525 86 -578 87 -580 92",
+		"		-582 97 -580 122 -566 125",
+		"		-552 128 -528 133 -524 126",
+		"		-520 119 -523 94 -524 90",
+		"		-525 86 -578 87 -580 92",
+		"		size 2",
+		"	endline",
+		"endscrap"
+	]);
+});
+
+test("export line with subtypes", () => {
+	const lineSettings = defaultLineSettings();
+	lineSettings.type = "slope";
+	lineSettings.subtypes = { 0: "underlying", 2: "bedrock" };
+
+	const result = processProject([
+		["Layer", {
+			children: [
+				["Path", {
+					segments: mockSegments,
+					closed: true,
+					data: { therionData: lineSettings }
+				}]
+			],
+			name: "scrap1",
+			data: { therionData: defaultScrapSettings() }
+		}]
+	]);
+
+	expect(result).toEqual([
+		"encoding utf-8",
+		"scrap scrap1 ",
+		"	line slope -close on",
+		"		-525 86 -578 87 -580 92",
+		"		subtype underlying",
+		"		-582 97 -580 122 -566 125",
+		"		-552 128 -528 133 -524 126",
+		"		subtype bedrock",
+		"		-520 119 -523 94 -524 90",
+		"		-525 86 -578 87 -580 92",
+		"	endline",
+		"endscrap"
+	]);
+});
+
+test("export line with segment settings", () => {
+	const lineSettings = defaultLineSettings();
+	lineSettings.type = "slope";
+	lineSettings.segmentSettings = { 0: "smooth off", 2: "smooth on" };
+
+	const result = processProject([
+		["Layer", {
+			children: [
+				["Path", {
+					segments: mockSegments,
+					closed: true,
+					data: { therionData: lineSettings }
+				}]
+			],
+			name: "scrap1",
+			data: { therionData: defaultScrapSettings() }
+		}]
+	]);
+
+	expect(result).toEqual([
+		"encoding utf-8",
+		"scrap scrap1 ",
+		"	line slope -close on",
+		"		-525 86 -578 87 -580 92",
+		"		smooth off",
+		"		-582 97 -580 122 -566 125",
+		"		-552 128 -528 133 -524 126",
+		"		smooth on",
+		"		-520 119 -523 94 -524 90",
+		"		-525 86 -578 87 -580 92",
+		"	endline",
+		"endscrap"
+	]);
+});
+
+test("export line with multiple segment settings", () => {
+	const lineSettings = defaultLineSettings();
+	lineSettings.type = "slope";
+	lineSettings.segmentSettings = { 0: "setting1;setting2", 2: "setting3\nsetting4" };
+
+	const result = processProject([
+		["Layer", {
+			children: [
+				["Path", {
+					segments: mockSegments,
+					closed: true,
+					data: { therionData: lineSettings }
+				}]
+			],
+			name: "scrap1",
+			data: { therionData: defaultScrapSettings() }
+		}]
+	]);
+
+	expect(result).toEqual([
+		"encoding utf-8",
+		"scrap scrap1 ",
+		"	line slope -close on",
+		"		-525 86 -578 87 -580 92",
+		"		setting1",
+		"		setting2",
+		"		-582 97 -580 122 -566 125",
+		"		-552 128 -528 133 -524 126",
+		"		setting3\nsetting4",
+		"		-520 119 -523 94 -524 90",
+		"		-525 86 -578 87 -580 92",
+		"	endline",
 		"endscrap"
 	]);
 });
