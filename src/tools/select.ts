@@ -377,7 +377,7 @@ export const select = defineTool({
 			const currentSelection = selection.getSelectedItems();
 			if (currentSelection.length === 1) {
 				const selected = currentSelection[0];
-				if (item.isPathItem(selected) && getSettings(selected).className === "LineSettings") {
+				if (item.isPathItem(selected) && getSettings(selected).className === "LineSettings" && selected.segments.length > 1) {
 					const settings = getSettings(selected) as LineSettings;
 					const reverse = settings.reverse ? -1 : 1;
 					const normal = selected.getNormalAt(0).multiply(10 * reverse);
