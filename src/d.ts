@@ -13,3 +13,5 @@ interface HitOptions {
 	class?: new () => paper.Item,
 	match?: (hit: paper.HitResult) => boolean,
 }
+
+declare module '*.vue';
