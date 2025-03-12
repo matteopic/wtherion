@@ -2,14 +2,14 @@
 import Toolbar from "./Toolbar.vue";
 import Sidebar from "./Sidebar.vue";
 import { onMounted, ref, watch } from "vue";
-import pg from "../init";
+import { init } from "../init";
 import DialogContainer from "./dialogs/DialogContainer.vue";
 import { cancelAll, drop } from "../filesio/dropfiles";
 import ContextMenu from "./CanvasContextMenu.vue";
 import Tooltip from "./Tooltip.vue";
 
 onMounted(() => {
-	pg.init();
+	init();
 })
 
 const showSidebar = ref(true);

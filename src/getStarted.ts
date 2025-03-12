@@ -1,4 +1,4 @@
-import { addDialog, removeDialog } from "@daem-on/graphite/modal";
+import { addDialog } from "@daem-on/graphite/modal";
 import GetStartedDialog from "./components/dialogs/GetStartedDialog.vue";
 import { handlers } from "./menu";
 import { importTH2 } from "./import/importWrapper";

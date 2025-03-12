@@ -1,6 +1,5 @@
 // function related to the main menu
 
-import { ref } from "vue";
 import AboutDialog from "./components/dialogs/AboutDialog.vue";
 import KeybindEditorDialog from "./components/dialogs/KeybindEditorDialog.vue";
 import * as configEditor from "./configEditor";
