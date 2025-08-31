@@ -231,11 +231,11 @@ export const select = defineTool({
 			
 			const hitResult = paper.project.hitTest(event.point, { ...hitOptions, tolerance });
 			if (hitResult && hitResult.item.layer === paper.project.activeLayer) {
+				const root = item.getRootItem(hitResult.item);
 				// deselect all by default if the shift key isn't pressed
 				// also needs some special love for compound paths and groups,
 				// as their children are not marked as "selected"
 				if (!event.modifiers.shift) {
-					const root = item.getRootItem(hitResult.item);
 					if (item.isCompoundPathItem(root) || group.isGroup(root)) {
 						if (!root.selected) {
 							selection.clearSelection();
@@ -248,7 +248,7 @@ export const select = defineTool({
 				if (event.modifiers.shift && hitResult.item.selected) {
 					selection.setItemSelection(hitResult.item, false);
 				} else {
-					const wasSelected = hitResult.item.selected;
+					const wasSelected = root.selected;
 					selection.setItemSelection(hitResult.item, true);
 					if (wasSelected || get("moveInstantly")) {
 						if (event.modifiers.alt) {
