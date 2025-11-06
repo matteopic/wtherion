@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { loadConfig, exists, get, assign } from '../../filesio/configManagement';
-import BooleanInput from '../common/BooleanInput.vue';
-import IntInput from '../common/IntInput.vue';
-import PanelSection from '../common/PanelSection.vue';
 import { removeDialog } from '@daem-on/graphite/modal';
+import { ref } from 'vue';
+import { assign, exists, get, loadConfig } from '../../filesio/configManagement';
+import { updateSaveHandler } from '../../filesio/saveManagement/saveManagement';
 import { i18n } from '../../i18n';
 import { redrawAll } from '../../objectDefs';
 import defaultConfig from "../../res/default-config.json";
-import Tabs from '../common/Tabs.vue';
-import RangeInput from '../common/RangeInput.vue';
+import BooleanInput from '../common/BooleanInput.vue';
+import IntInput from '../common/IntInput.vue';
 import PanelDetailSection from '../common/PanelDetailSection.vue';
+import PanelSection from '../common/PanelSection.vue';
+import RangeInput from '../common/RangeInput.vue';
+import Tabs from '../common/Tabs.vue';
 import ToggleButtons from '../common/ToggleButtons.vue';
 
 const options = ref(defaultConfig);
@@ -19,6 +20,7 @@ function apply() {
 	assign(options.value);
 	redrawAll();
 	i18n.global.locale = options.value.language as any;
+	updateSaveHandler(options.value.saveHandler);
 }
 
 function close() {

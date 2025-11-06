@@ -15,6 +15,17 @@ export const saveManager = createSaveManager({
 	providers: { localStorageSaves, fileSystemSaves },
 });
 
+export function updateSaveHandler(setting: string) {
+	switch (setting) {
+		case "localStorage":
+			saveManager.switchProvider("localStorageSaves");
+			break;
+		case "fileSystem":
+			saveManager.switchProvider("fileSystemSaves");
+			break;
+	}
+}
+
 export { exportTH2 } from "./fileSystemExports";
 
 export type MultipleFileSelectDialogData = DialogData<{

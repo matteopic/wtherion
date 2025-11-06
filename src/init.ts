@@ -9,11 +9,12 @@ import * as i18n from "./i18n";
 import * as pgDocument from "./document";
 
 import paper from "paper";
-import {setup as configSetup} from "./filesio/configManagement";
+import {setup as configSetup, get} from "./filesio/configManagement";
 import { setupCustomRenderer } from "./render";
 import { initColors } from "./objectDefs.js";
 import colorDefs from "./res/color-defs.json";
 import { maybeShowGetStartedDialog } from "./getStarted";
+import { updateSaveHandler } from "./filesio/saveManagement/saveManagement.js";
 
 export function init() {
 	paper.setup('paperCanvas');
@@ -30,6 +31,7 @@ export function init() {
 	pgDocument.setup();
 	setupCustomRenderer();
 	initColors(colorDefs);
+	updateSaveHandler(get("saveHandler"));
 
 	maybeShowGetStartedDialog();
 }
