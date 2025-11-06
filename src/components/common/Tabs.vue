@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { ref, useSlots } from 'vue';
+import { computed, ref, useSlots } from 'vue';
 import MenuButton from './MenuButton.vue';
 
 const selected = ref(0);
 
-const tabs = useSlots().default?.().filter(vnode => {
+const slots = useSlots();
+
+const tabs = computed(() => slots.default().filter(vnode => {
 	return vnode.type === "div";
 }).map((vnode, index) => ({
 	label: vnode.props?.label || `Tab ${index + 1}`,
 	content: vnode,
-}));
+})));
 
 </script>
 
