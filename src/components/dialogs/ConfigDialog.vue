@@ -44,6 +44,9 @@ for (const key in options.value) {
 const t = i18n.global.t;
 const availableLocales = i18n.global.availableLocales;
 
+const estimated = ref<StorageEstimate | undefined>();
+navigator.storage.estimate().then(val => estimated.value = val);
+
 </script>
 
 <template>
@@ -88,6 +91,10 @@ const availableLocales = i18n.global.availableLocales;
 						<option value="fileSystem">{{ t(`config.saveHandler.fileSystem`) }}</option>
 					</select>
 				</PanelSection>
+				<div class="storage-quota" v-if="options.saveHandler === 'localStorage' && estimated">
+					<progress value="estimated.usage / estimated.quota" />
+					<p>~<code>{{ estimated.usage }} / ~{{ estimated.quota }}</code></p>
+				</div>
 				<PanelDetailSection :label="t(`config.asyncClipboard`)" :hint="t(`config.asyncClipboardHint`)">
 					<BooleanInput class="align-start" v-model="options.enableAsyncClipboard"></BooleanInput>
 				</PanelDetailSection>
@@ -145,6 +152,18 @@ h3 {
 	display: flex;
 	justify-content: flex-end;
 	gap: 8px;
+}
+
+.storage-quota {
+	display: flex;
+	flex-direction: column;
+	align-items: end;
+	gap: 4px;
+}
+
+.storage-quota progress {
+	width: 100%;
+	accent-color: #338860;
 }
 
 </style>
