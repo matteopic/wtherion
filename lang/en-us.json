@@ -59,7 +59,9 @@
 		"drawSymbolsOn": "full symbols",
 		"asyncClipboardHint": "Only in supported browsers. Will ask for permission. Enable this to copy and paste across browser tabs or different apps.",
 		"undoBufferSizeHint": "Larger values lead to more memory usage.",
-		"selectSection": "Select tool"
+		"selectSection": "Select tool",
+		"changeLayerOnClick": "Select objects on different scraps",
+		"changeLayerOnClickHint": "When this is enabled, clicking on an object will select it even if it's not on the selected scrap."
 	},
 	"configTitle": "Configuration",
 	"copy": "Copy",

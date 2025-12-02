@@ -10,5 +10,6 @@
 	"drawSymbols": false,
 	"undoBufferSize": 40,
 	"exportFormat": "default",
-	"moveInstantly": true
+	"moveInstantly": true,
+	"changeLayerOnClick": false
 }

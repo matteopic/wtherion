@@ -54,7 +54,9 @@
 		"moveInstantlyOn": "Bármilyen objektumnál",
 		"moveInstantlyHint": "Választhat, hogy az objektumokat először kijelöli és aztán mozgatja, vagy bármilyen objektumot rögtön mozgat.",
 		"toolsTab": "Eszközök",
-		"undoBufferSizeHint": "Nagyobb értékek nagyobb memóriahasználattal járnak."
+		"undoBufferSizeHint": "Nagyobb értékek nagyobb memóriahasználattal járnak.",
+		"changeLayerOnClick": "Elemek kiválasztása bármelyik scrap-en",
+		"changeLayerOnClickHint": "Amikor ez be van kapcsolva, az elemeket ki lehet választani kattintással akkor is, ha másik scrap-en vannak."
 	},
 	"configTitle": "Konfiguráció",
 	"copy": "Másolás",

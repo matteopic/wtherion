@@ -64,6 +64,9 @@ navigator.storage.estimate().then(val => estimated.value = val);
 						<option :value="true">{{ t(`config.moveInstantlyOn`) }}</option>
 					</select>
 				</PanelDetailSection>
+				<PanelDetailSection :label="t(`config.changeLayerOnClick`)" :hint="t(`config.changeLayerOnClickHint`)">
+					<BooleanInput class="align-start" v-model="options.changeLayerOnClick"></BooleanInput>
+				</PanelDetailSection>
 			</div>
 			<div :label="t(`config.appearanceTab`)">
 				<PanelDetailSection :label="t(`config.colorInactive`)">

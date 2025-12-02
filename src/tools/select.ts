@@ -234,9 +234,12 @@ export const select = defineTool({
 			if (hitResult) {
 
 				if (hitResult.item.layer !== paper.project.activeLayer) {
-					setActiveLayer(hitResult.item.layer);
+					if (get("changeLayerOnClick")) {
+						setActiveLayer(hitResult.item.layer);
+					} else {
+						return;
+					}
 				}
-
 				const root = item.getRootItem(hitResult.item);
 				// deselect all by default if the shift key isn't pressed
 				// also needs some special love for compound paths and groups,
